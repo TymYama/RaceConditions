@@ -51,10 +51,11 @@ public class RaceConditions{
                             runs++;
                         }
                         if(data > 1){
-                            System.out.println("Race condition found at index " + i + " of value " + buffer[(next_out + i)%n]
+                            System.out.println("Race condition found at index " + i + " of value " + data
                                                 + " after " + runs + " full run(s). The consumer was not fast enough." );
                             keepGoing = false;
-                            break;
+                            
+                            System.exit(0);
                         }else{
                             buffer[(next_out + i)%n] = 0;
                         }

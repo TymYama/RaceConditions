@@ -23,7 +23,9 @@ public class RaceCond2{
                     k1 = rand.nextInt((k + 1)); //random int 0 to k
                     for(int i = 0; i<k1; i++){
                         if(keepGoing){
-                            P(buffer[(next_in + i)%n]);
+                            //If the spot is already 1, wait for the consumer.
+                            while((buffer[(next_out + i)%n] > 0) && keepGoing);
+                            buffer[(next_out + i)%n] += 1;
                         }else{
                             break;
                         }
@@ -56,14 +58,14 @@ public class RaceCond2{
                             runs++;
                         }
                         if(data > 1){
-                            System.out.println("Race condition found at index " + i + " of value " + buffer[(next_out + i)%n]
+                            System.out.println("Race condition found at index " + i + " of value " + data
                                                 + " after " + runs + " full run(s). The consumer was not fast enough." );
                             keepGoing = false;
-                            break;
+                            System.exit(0);
                         }if(runs > finish){
                             System.out.println("Reached maximum number of runs without a race condition." );
                             keepGoing = false;
-                            break;
+                            System.exit(0);
                         }else{
                             buffer[(next_out + i)%n] = 0;
                         }
@@ -74,10 +76,5 @@ public class RaceCond2{
         });
         producer.start();
         consumer.start();
-    }
-    public static void P(int s){
-        while((s == 0) && !keepGoing);
-        s = s-1;
-        return;
     }
 }
